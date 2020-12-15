@@ -1,0 +1,26 @@
+- hosts: homeautomation
+  remote_user: pi
+  become: yes
+  tasks:
+    - name: Clone home automation git repo
+      become: yes
+      become_user: homeassistant
+      become_method: sudo
+      become_flags: '-H -s'
+      git:
+        repo: 'https://github.com/pihltd/homeassistant.git'
+        dest: /home/homeassistant/HomeAutoGithub
+    - name: Copy the config files
+      become: yes
+      become_user: homeassistant
+      become_method: sudo
+      become_flags: '-H -s'
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        remote_src: yes
+      with_items:
+        - {src: '/home/homeassistant/HomeAutoGithub/automations.yaml', dest: '/home/homeassistant/.homeassistant/automations.yaml'}
+        - {src: '/home/homeassistant/HomeAutoGithub/configuration.yaml', dest: '/home/homeassistant/.homeassistant/configuration.yaml'}
+        - {src: '/home/homeassistant/HomeAutoGithub/groups.yaml', dest: '/home/homeassistant/.homeassistant/groups.yaml'}
+        - {src: '/home/homeassistant/HomeAutoGithub/input_boolean.yaml', dest: '/home/homeassistant/.homeassistant/input_boolean.yaml'}

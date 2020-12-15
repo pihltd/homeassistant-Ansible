@@ -1,0 +1,33 @@
+- hosts: homeautomation
+  remote_user: pi
+  become: yes
+  tasks:
+    - name: CreateSystemdFile
+      file:
+        path: /etc/systemd/system/home-assistant@homeassistant.service
+        state: touch
+    - name: ConfigureForAutostart
+      blockinfile:
+        path: /etc/systemd/system/home-assistant@homeassistant.service
+        block: |
+          [Unit]
+          Description=Home Assistant
+          After=network-online.target
+
+          [Service]
+          Type=simple
+          User=%i
+          Restart=on-failure
+          RestartSec=5s
+          ExecStart=/srv/homeassistant/bin/hass -c "/home/%i/.homeassistant"
+
+          [Install]
+          WantedBy=multi-user.target
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
+    - name: Enable homeassistant
+      systemd:
+        name: home-assistant@homeassistant
+        enabled: yes
+        masked: no

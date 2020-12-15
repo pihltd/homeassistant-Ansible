@@ -1,0 +1,28 @@
+- hosts: homeautomation
+  remote_user: pi
+  become: yes
+  tasks:
+    - name: Clone acme.sh
+      become: yes
+      become_user: homeassistant
+      become_method: sudo
+      become_flags: '-H -s'
+      git:
+        repo: 'https://github.com/acmesh-official/acme.sh.git'
+        dest: /home/homeassistant/acme.sh
+    - name: Install acme.sh
+      become: yes
+      become_user: homeassistant
+      become_method: sudo
+      become_flags: '-H -s'
+      args:
+        chdir: /home/homeassistant/acme.sh
+      command: "./acme.sh --install"
+    - name: Get certificates
+      become: yes
+      become_user: homeassistant
+      become_method: sudo
+      become_flags: '-H -s'
+      args:
+        chdir: /home/homeassistant/.acme.sh
+      command: "./acme.sh --issue -d pihlsecor.duckdns.org -w /home/homeassistant/.acme.sh/pihlsecor.duckdns.org"

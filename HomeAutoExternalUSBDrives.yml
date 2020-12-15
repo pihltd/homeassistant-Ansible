@@ -1,0 +1,26 @@
+#UUID 4A75-A30E Linux backup  VFAT
+# UUID c74a8913-e309-4779-a241-158277d61a04  Calibre ext3
+# UUID fa8e08c4-a62a-4bbf-92c6-da9d9afc06f0 Owncloud ext4
+# UUID 93e0ee1a-6010-451e-acc5-8ac08c6c05f3 Windows backup ext3
+
+- hosts: homeautomation
+  remote_user: pi
+  become: yes
+  tasks:
+    - name: Create mountpoints
+      file:
+        path: "{{ item }}"
+        owner: root
+        group: root
+        mode: 0755
+        recurse: yes
+        state: directory
+      with_items: ["/mnt/linuxbackup", "/mnt/calibre", "/mnt/owncloud", "/mnt/windowsbackup"]
+    - name: Modify fstab
+      blockinfile:
+        path: /etc/fstab
+        block : |
+          UUID=4A75-A30E /mnt/linuxbackup vfat defaults,auto,users,rw,nofail,umask=000 0 0
+          UUID=c74a8913-e309-4779-a241-158277d61a04 /mnt/calibre ext3 defaults,auto,users,rw,nofail 0 0
+          UUID=fa8e08c4-a62a-4bbf-92c6-da9d9afc06f0 /mnt/owncloud ext4 defaults,auto,users,rw,nofail 0 0
+          UUID=93e0ee1a-6010-451e-acc5-8ac08c6c05f3 /mnt/windowsbackup ext3 defaults,auto,users,rw,nofail 0 0

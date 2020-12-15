@@ -1,0 +1,36 @@
+- hosts: homeautomation
+  remote_user: pi
+  become: yes
+  tasks:
+    - name: install certbot
+      apt:
+        pkg:
+          - certbot
+        update_cache: yes
+        state: latest
+    - name: Stop homeassistant
+      systemd:
+        name: home-assistant@homeassistant.service
+        state: stopped
+    - name: Get certificates
+      command: "certbot certonly --standalone --preferred-challenges http-01 --email todd.pihl@gmail.com -d pihlsecor.duckdns.org"
+    - name: Change Live Permissions
+      file:
+        path: /etc/letsencrypt/live/
+        state: directory
+        mode: '755'
+    - name: Change Archive Permissions
+      file:
+        path: /etc/letsencrypt/archive
+        state: directory
+        mode: '755'
+    - name: Change letsencrypt Permissions
+      file:
+        path: /etc/letsencrypt
+        state: directory
+        recurse: yes
+        mode: '777'
+    - name: Start homeassistant
+      systemd:
+        name: home-assistant@@homeassistant.service
+        state: started

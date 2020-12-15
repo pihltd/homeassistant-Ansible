@@ -1,0 +1,13 @@
+- hosts: homeautomation
+  remote_user: pi
+  become: yes
+  tasks:
+    - name: TurnOffPasswords
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^#PasswordAuthentication yes"
+        line: "PasswordAuthentication no"
+    - name: Restart sshd
+      systemd:
+        service: ssh
+        state: restarted

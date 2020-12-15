@@ -1,0 +1,84 @@
+#https://linuxhint.com/install_owncloud_raspberry_pi/
+- hosts: homeautomation
+  remote_user: pi
+  become: yes
+  tasks:
+#    - name: Import the owncloud repository key
+#      apt_key:
+#        url: https://download.owncloud.org/download/repositories/production/Debian_10/Release.key
+#        state: present
+#      become: true
+#    - name: Add owncloud repository
+#      apt_repository:
+#        repo: deb https://download.owncloud.org/download/repositories/production/Debian_10/ /
+#        state: present
+#      become: true
+#    - name: Do a system update
+#      apt:
+#        upgrade: yes
+#        update_cache: yes
+#        autoclean: yes
+#        autoremove: yes
+#    - name: install owncloud dependencies
+#      apt:
+#        pkg:
+#          - apache2
+#          - libapache2-mod-php
+#          - mariadb-server
+#          - mariadb-client
+#          - php-bz2
+#          - php-mysql
+#          - php-curl
+#          - php-gd
+#          - php-imagick
+#          - php-intl
+#          - php-mbstring
+#          - php-xml
+#          - php-zip
+#    - name: Enable mod rewrite
+#      apache2_module:
+#        state: present
+#        name: rewrite
+#    - name: Install pymysql
+#      pip:
+#        name: PyMySQL
+### All lines with ## don't work in Ansible, the root account isn't accessed
+##    - name: Set mariadb root password
+##      mysql_user:
+##        #name: root
+##        login_user: root
+##        login_password: ''
+##        name: root
+##        host: localhost
+##        password: "{{ root_password }}"
+##        priv: '*.*:ALL,GRANT'
+##        check_implicit_admin: yes
+##        state: present
+##      become: yes
+##    - name: Removes anonymous user account for localhost
+##      mysql_user:
+##        name: ''
+##        host: localhost
+##        state: absent
+##    - name: Create owncloud database
+##      mysql_db:
+##        name: owncloud
+##        state: present
+##    - name: Create owncloud database user
+##    mysql_user:
+##        name: owncloud
+##        password: "{{ owncloud_password }}"
+##        priv: 'owncloud.*:ALL'
+       - name: Edit Apache configuration
+         replace:
+           path: /etc/apache2/sites-enabled/000-default.conf
+           regexp: '^DocumentRoot /var/www/html'
+           replace: 'DocumentRoot /var/www/owncloud'
+       - name: Install Owncloud
+         apt:
+           pkg:
+             - owncloud-files
+       - name: Restart Apache
+         systemd:
+           service: apache2
+           state: restarted

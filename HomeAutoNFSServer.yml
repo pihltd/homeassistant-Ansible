@@ -1,0 +1,20 @@
+- hosts: homeautomation
+  remote_user: pi
+  become: yes
+  tasks:
+    - name: Install NFS packages
+      apt:
+        pkg:
+          - nfs-kernel-server
+    - name: Update exports file
+      blockinfile:
+        path: /etc/exports
+        block: |
+          /mnt/windowsbackup       192.168.1.0/24(rw,fsid=0,insecure,no_subtree_check,async)
+          /mnt/linuxbackup       192.168.1.0/24(rw,fsid=0,insecure,no_subtree_check,async)
+          /mnt/calibre       192.168.1.0/24(rw,fsid=0,insecure,no_subtree_check,async)
+          /mnt/owncloud       192.168.1.0/24(rw,fsid=0,insecure,no_subtree_check,async)
+    - name: Restart nfs server
+      systemd:
+        service: nfs-kernel-server
+        state: restarted
