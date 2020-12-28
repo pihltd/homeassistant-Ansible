@@ -2,6 +2,7 @@
 # UUID c74a8913-e309-4779-a241-158277d61a04  Calibre ext3
 # UUID fa8e08c4-a62a-4bbf-92c6-da9d9afc06f0 Owncloud ext4
 # UUID 93e0ee1a-6010-451e-acc5-8ac08c6c05f3 Windows backup ext3
+# UUID E64E62414E620B1F  Toshiba Elements ntfs
 
 - hosts: homeautomation
   remote_user: pi
@@ -24,3 +25,4 @@
           UUID=c74a8913-e309-4779-a241-158277d61a04 /mnt/calibre ext3 defaults,auto,users,rw,nofail 0 0
           UUID=fa8e08c4-a62a-4bbf-92c6-da9d9afc06f0 /mnt/owncloud ext4 defaults,auto,users,rw,nofail 0 0
           UUID=93e0ee1a-6010-451e-acc5-8ac08c6c05f3 /mnt/windowsbackup ext3 defaults,auto,users,rw,nofail 0 0
+          UUID=E64E62414E620B1F /mnt/bigbackup ntfs defaults,auto,users,rw,nofail,umask=000 0 0
