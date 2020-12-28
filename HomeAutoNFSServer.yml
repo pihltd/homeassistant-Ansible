@@ -14,6 +14,8 @@
           /mnt/linuxbackup       192.168.1.0/24(rw,fsid=0,insecure,no_subtree_check,async)
           /mnt/calibre       192.168.1.0/24(rw,fsid=0,insecure,no_subtree_check,async)
           /mnt/owncloud       192.168.1.0/24(rw,fsid=0,insecure,no_subtree_check,async)
+          /mnt/bigbackup       192.168.1.0/24(rw,fsid=0,insecure,no_subtree_check,async)
+          
     - name: Restart nfs server
       systemd:
         service: nfs-kernel-server
